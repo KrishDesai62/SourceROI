@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0a1224" />
+  <title>SourceROI · Data intelligence for AI agents</title>
+  <link href="/styles.css" rel="stylesheet" />
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a href="/" class="brand" aria-label="SourceROI home"><span class="brand-mark">S<span>↗</span></span><span>Source<span class="brand-accent">ROI</span><small>DATA INTELLIGENCE</small></span></a>
+      <div class="side-caption">WORKSPACE</div>
+      <div class="workspace-item"><span class="w-icon">▦</span><div><b id="project-name-side">Financial Research Agent</b><small>Demo workspace</small></div></div>
+      <div class="side-caption side-nav-title">WORKBENCH</div>
+      <nav class="side-nav" aria-label="Dashboard sections">
+        <button class="nav-item active" data-tab="overview"><span class="nav-icon">▣</span> Overview</button>
+        <button class="nav-item" data-tab="tasks"><span class="nav-icon">≡</span> Task inspector</button>
+        <button class="nav-item" data-tab="changes"><span class="nav-icon">◇</span> Data CI / regressions</button>
+      </nav>
+      <div class="side-rule"></div>
+      <div class="side-caption source-heading">SOURCE CONTROLS <span>LIVE EXPERIMENT</span></div>
+      <p class="side-help">Select datasets to remove, then run an A/B comparison against the full baseline.</p>
+      <div id="source-toggles" class="sources-list"><div class="loading-line"></div></div>
+      <button id="compare-btn" class="primary-btn full"><span>▶</span> Run comparison</button>
+      <button id="reset-btn" class="subtle-btn full">Reset selection</button>
+      <div class="sidebar-bottom"><span class="status-pip"></span> Local mode <span class="status-muted">· No API key</span><small>All data stays on this machine.</small></div>
+    </aside>
+    <div class="content-shell">
+      <header class="topbar">
+        <div class="crumbs"><span>Workspace</span><span class="sep">/</span><strong id="crumb-current">Overview</strong></div>
+        <div class="top-actions"><span class="local-label"><span class="status-pip"></span> Offline benchmark</span><button id="refresh-btn" class="outline-btn">↻ Refresh evaluation</button><button id="save-btn" class="outline-btn accent-outline">＋ Save baseline</button></div>
+      </header>
+      <main class="main-content">
+        <div class="page-heading">
+          <div><div class="eyebrow">SOURCE INTELLIGENCE / V0.1</div><h1 id="view-heading">Your data, measured.</h1><p id="view-subtitle">See which datasets actually help your AI agent—and what changes when you remove them.</p></div>
+          <span class="demo-flag">◆ SYNTHETIC FINANCE DEMO</span>
+        </div>
+        <div id="error-banner" class="error-banner hidden"></div>
+        <section id="overview-view" class="tab-view">
+          <div id="metric-grid" class="metric-grid"><div class="panel loading-line"></div></div>
+          <div class="overview-grid">
+            <section class="panel impact-card"><div class="panel-header"><div><h2>Dataset impact</h2><p>Tasks lost when each source is removed</p></div><span class="mini-label">SINGLE-SOURCE ABLATION</span></div><div id="impact-bars"></div><div class="panel-note">Higher impact means more tasks depend on this source in the sample benchmark. This is not an intrinsic data-value score.</div></section>
+            <section class="panel compare-card"><div class="panel-header"><div><h2>Experiment result</h2><p>Baseline vs. selected configuration</p></div><span id="experiment-status" class="mini-label">NO EXPERIMENT</span></div><div id="experiment-panel" class="experiment-placeholder"><div class="placeholder-icon">⌁</div><h3>Ready to test a change</h3><p>Select one or more sources on the left to see what changes in accuracy, cost and modeled latency.</p></div></section>
+          </div>
+          <div class="overview-grid lower-grid">
+            <section class="panel doc-impact"><div class="panel-header"><div><h2>Most consequential documents</h2><p>How individual files affect benchmark results</p></div><button id="open-tasks-btn" class="text-action">See all tasks ↗</button></div><div id="document-impact"></div></section>
+            <section class="panel insight-panel"><div class="panel-header"><div><h2>What this prototype proves</h2><p>What these results mean—and don't</p></div><span class="mini-label">METHODOLOGY</span></div><div class="insight"><span class="insight-symbol positive">✓</span><div><b>Controlled ablations</b><p>Same tasks, same agent, different accessible source files.</p></div></div><div class="insight"><span class="insight-symbol positive">✓</span><div><b>Outcome-based scores</b><p>Exact-answer correctness and supporting document IDs; not retrieval similarity alone.</p></div></div><div class="insight"><span class="insight-symbol caution">!</span><div><b>Costs and upstream latency are modeled</b><p>Source prices and latency are fictional configuration inputs. Local compute time is measured.</p></div></div><div class="insight"><span class="insight-symbol caution">!</span><div><b>Offline agent is deliberately simple</b><p>It extracts structured facts from documents; it is not a production LLM or proof of causal lift.</p></div></div></section>
+          </div>
+          <div class="overview-grid lower-grid">
+            <section class="panel portfolio-panel"><div class="panel-header"><div><h2>Source portfolio planner</h2><p>Cheapest source combination for a required accuracy floor</p></div><span class="mini-label">32 CONFIGURATIONS</span></div><div class="quality-picker" id="quality-picker"><button class="quality-option" data-floor="0.75">75%</button><button class="quality-option active" data-floor="0.85">85%</button><button class="quality-option" data-floor="0.95">95%</button><button class="quality-option" data-floor="1.0">100%</button></div><div id="portfolio-result"></div><div class="panel-note">Exhaustive on this 5-source synthetic example; optimizes configured lookup cost subject to measured benchmark accuracy. It excludes fixed contracts and licensing fees.</div></section>
+            <section class="panel fact-panel"><div class="panel-header"><div><h2>Most valuable individual facts</h2><p>Remove one document field at a time and retest</p></div><span class="mini-label">FIELD ABLATION</span></div><div id="fact-impact"></div></section>
+          </div>
+        </section>
+        <section id="tasks-view" class="tab-view hidden">
+          <div class="panel"><div class="panel-header task-header"><div><h2>Task inspector</h2><p>Each answer, its evidence and which source was queried</p></div><div class="filter-group"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="pass">Correct</button><button class="filter" data-filter="fail">Incorrect</button></div></div><div class="table-scroller"><table class="data-table"><thead><tr><th>Task</th><th>Question / answer</th><th>Evidence</th><th>Result</th></tr></thead><tbody id="task-rows"></tbody></table></div><div class="panel-note">Ground truth lives in <code>examples/finance/benchmark.json</code> and is never passed to the offline answer engine.</div></div>
+        </section>
+        <section id="changes-view" class="tab-view hidden">
+          <div class="panel ci-banner"><div class="ci-mark">◇</div><div><h2>Data CI — regression checks for your sources</h2><p>Save a baseline, edit or remove a dataset file in VS Code, then refresh. SourceROI compares correctness and detects changed file fingerprints.</p></div></div>
+          <div id="regression-content" class="regression-content"></div>
+          <section class="panel workflow-panel"><h2>Try a real file change</h2><div class="steps-grid"><div><span>01</span><b>Save a baseline</b><p>Click the button at the top right.</p></div><div><span>02</span><b>Edit a source</b><p>Change a fact in <code>examples/finance/sources/filings/aster_fy2025.md</code>.</p></div><div><span>03</span><b>Refresh</b><p>See changed files and newly failed tasks; then revert your edit.</p></div></div></section>
+        </section>
+        <footer class="footer"><span>SourceROI v0.1 · Local-first research prototype</span><span>Fictional companies · Synthetic prices · No production claims</span></footer>
+      </main>
+    </div>
+  </div>
+  <div id="document-modal" class="modal-layer hidden" role="dialog" aria-modal="true" aria-label="Source document"><div class="modal"><div class="modal-top"><div><div class="eyebrow">SOURCE DOCUMENT</div><h2 id="modal-title">Document</h2><small id="modal-path"></small></div><button id="close-modal" class="modal-close" aria-label="Close">×</button></div><pre id="modal-body"></pre></div></div>
+  <div id="toast" class="toast hidden" role="status"></div>
+</body>
+</html>

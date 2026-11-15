@@ -1,0 +1,13 @@
+# Complete restore validation
+
+**VERIFIED internal acceptance:** `docs/artifacts/phase2/acceptance-v3/` contains the complete fixture archive, trusted digest in `acceptance-results.json`, and the independent restored workspace. All documents, labels, operators and reviews are authored fixtures; no model was called.
+
+The acceptance probe freezes a source version, records a change plan and authenticated development review, commits/executes an offline durable job, records SQLite run history, backs up, restores to a new root and compares identities/history. Restored user/session/approval/job counts are all **zero**. Prior job events/approvals are retained in sanitized historical provenance; no historical queue entry is executable. Separate regression testing re-provisions a fresh operator and verifies login in the restored workspace. Earlier acceptance-v1/v2 artifacts are preserved.
+
+Verified failures: wrong trusted digest, corrupt/truncated archive, missing source, altered source bytes, unexpected members, duplicate entries, symlink/traversal members, invalid/incompatible manifest, rewritten hashes with inconsistent source identities, tampered frozen snapshot, existing target, unavailable quiescence, source symlink/hardlink, unexpected identity file and changed files during capture. None produces a successful restore/backup.
+
+Actual killed backup subprocess: only a named partial archive remains; final output is absent, and a subsequent fresh backup succeeds after OS lock release. Actual killed restore subprocess: RESTORE_INCOMPLETE remains, with no published workspace. A separate CLI process cannot acquire a shared lock while backup owns exclusive quiescence. There is no automatic overwrite/resume/cleanup; inspect evidence and choose a new destination.
+
+Latest tiny fixture measurements: submit 4.76 ms, duplicate lookup 3.60 ms, offline worker 9.32 ms, backup 8.58 ms, restore 10.39 ms, terminal recovery scan 0.12 ms; full probe 0.150 s, peak process RSS 62,111,744 bytes. These are one small local sample, not production RPO/RTO, capacity, latency percentiles or customer workload results. RPO depends on explicit stopped-writer backup cadence; no operational guarantee or chosen customer recovery objective is claimed.
+
+PENDING: large data, off-host encrypted backups, machine/power-loss fault injection, filesystem durability across every platform, backup scheduling/retention, malicious concurrent writers, and real operator incident drills. Current supported locking is POSIX on the tested macOS ARM64 environment; other platforms require validation. Restored legacy reports preserve their original paths/provenance and may require operator inspection; restoring never upgrades old approval assertions into authenticated authority.

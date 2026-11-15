@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111e">
+  <title>SourceROI · Data Intelligence</title>
+  <link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-symbol">S<span>↗</span></div><div>Source<span class="teal">ROI</span><small>DATA INTELLIGENCE</small></div></div>
+    <div class="workspace"><span class="wk-icon">▤</span><div><strong id="workspace-name">Loading...</strong><small>Local real-data workspace</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav aria-label="Sections">
+      <button data-view="overview" class="nav-btn active">◈ &nbsp; Overview</button>
+      <button data-view="experiments" class="nav-btn">◇ &nbsp; Experiments</button>
+      <button data-view="history" class="nav-btn">≡ &nbsp; Run history</button>
+      <button data-view="setup" class="nav-btn">⚙ &nbsp; Data & setup</button>
+    </nav>
+    <div class="side-bottom"><span class="online"></span> Live evaluation beta<br><small>Local-only · Real data · v0.2</small></div>
+  </aside>
+  <div class="main">
+    <header class="header"><span id="crumb">Workspace / Overview</span><div class="header-right"><span id="status" class="pill">Ready</span><button class="ghost small" id="refresh">↻ Refresh</button></div></header>
+    <div class="body">
+      <section id="authentication" class="hidden" aria-label="Workspace authentication">
+        <p id="auth-status" role="status">Sign in with your workspace identity. Authenticated execution is disabled in this engineering stage.</p>
+        <form id="login-form">
+          <label>Username <input id="login-user" autocomplete="username" required maxlength="64"></label>
+          <label>Password <input id="login-password" type="password" autocomplete="current-password" required maxlength="1024"></label>
+          <button type="submit">Sign in</button>
+        </form>
+        <button id="logout" type="button" class="hidden">Sign out</button>
+      </section>
+      <section aria-label="Durable fixture jobs" id="durable-jobs">
+        <h2>Durable jobs — fixtures only</h2>
+        <p>Requires an authenticated operator and a reviewed plan. No real model is authorized. Run the foreground CLI worker explicitly after queuing.</p>
+        <label>Fixture answers by task ID (baseline and candidate)<textarea id="fixture-answers" rows="3" placeholder='{"baseline":{},"candidate":{}}'></textarea></label>
+        <button id="fixture-submit" type="button">Authorize and queue fixture release</button>
+        <label>Job ID <input id="durable-job-id" maxlength="64"></label>
+        <button id="durable-inspect" type="button">Inspect / poll</button>
+        <button id="durable-cancel" type="button">Request cancellation</button>
+        <pre id="durable-output" aria-live="polite"></pre>
+      </section>
+      <section id="semantic-review-form" aria-label="Assigned semantic adjudication">
+        <h2>Semantic adjudication</h2>
+        <p>Assigned reviewers only. The backend supplies your identity. Login does not establish source-owner authority or independent expertise.</p>
+        <label>Evaluated task ID <input id="semantic-task" required></label>
+        <button id="semantic-load" type="button">Load exact review packet for job above</button>
+        <pre id="semantic-packet" tabindex="0" aria-label="Frozen answer and cited evidence"></pre>
+        <label>Claim judgment <select id="semantic-decision"><option value="uncertain">Uncertain / ambiguous</option><option value="supported">Supported</option><option value="unsupported">Unsupported</option><option value="contradicted">Contradicted</option><option value="applicability_failure">Applicability failure</option></select></label>
+        <label>Semantic correctness <select id="semantic-correct"><option value="unknown">Unknown</option><option value="true">True</option><option value="false">False</option></select></label>
+        <label>Citation correctness <select id="semantic-citations"><option value="unknown">Unknown</option><option value="true">True</option><option value="false">False</option></select></label>
+        <label>Scope appropriate <select id="semantic-scope"><option value="unknown">Unknown</option><option value="true">True</option><option value="false">False</option></select></label>
+        <label>Uses outdated fact <select id="semantic-outdated"><option value="unknown">Unknown</option><option value="true">True</option><option value="false">False</option></select></label>
+        <label>Explicit claim spans and cited quotes (JSON)<textarea id="semantic-claims" rows="4" placeholder='[]'></textarea></label>
+        <label>Review rationale <textarea id="semantic-rationale" rows="2" required></textarea></label>
+        <label>Delegation / authorization basis (not proof of independence)<textarea id="semantic-basis" rows="2" required></textarea></label>
+        <button id="semantic-submit" type="button">Record immutable judgment</button>
+        <p id="semantic-status" role="status">No review packet loaded. No independence or approval is inferred.</p>
+      </section>
+      <div id="error" class="alert hidden"></div>
+      <section id="knowledge-decision" aria-label="Knowledge Change Review">
+        <h2>Knowledge Change Review</h2>
+        <p>Compare frozen and current evidence without model calls. Recommendations require review; evidence coverage is not answer accuracy or release approval.</p>
+        <label>Frozen snapshot ID <input id="decision-snapshot" maxlength="32"></label>
+        <label>Alternatives JSON <textarea id="decision-alternatives" rows="4">[{"name":"updated","corpus":"candidate"}]</textarea></label>
+        <label>Evidence requirements JSON <textarea id="decision-requirements" rows="2">{"min_reference_coverage":1.0,"max_reference_regressions":0,"protected_tasks":[]}</textarea></label>
+        <button id="decision-run" type="button">Test evidence alternatives — no generation</button>
+        <p id="decision-status" role="status">No decision evaluated.</p>
+        <div id="decision-summary"></div>
+        <pre id="decision-output" tabindex="0" aria-label="Knowledge decision evidence and uncertainty"></pre>
+      </section>
+      <section id="overview" class="view">
+        <div class="heading"><div class="eyebrow">INTELLIGENCE LAYER / LIVE WORKSPACE</div><h1>Know what your data changes.</h1><p>Test real AI-agent outcomes as you add, remove, or replace information. No sample scores. No invented token bills.</p></div>
+        <div class="callout" id="onboarding"><div><strong>Connect your data to start.</strong><p>Add files to the workspace and independently verified questions to <code>benchmark.jsonl</code>. Model credentials stay in your environment.</p></div><button class="primary" data-view="setup">Setup guide ↗</button></div>
+        <div class="stats" id="stats"><div class="stat"><small>Documents</small><strong>—</strong><span>Real files</span></div><div class="stat"><small>Benchmark tasks</small><strong>—</strong><span>Verified answer keys</span></div><div class="stat"><small>Last run accuracy</small><strong>—</strong><span>Not evaluated</span></div><div class="stat"><small>Mean task latency</small><strong>—</strong><span>Measured end to end</span></div></div>
+        <div class="columns">
+          <div class="panel"><div class="panel-head"><div><h2>Connected datasets</h2><p>All sources are read from your project folder</p></div><span class="tag">LIVE</span></div><div id="sources"></div></div>
+          <div class="panel"><div class="panel-head"><div><h2>Latest evaluation</h2><p>Measured performance, not modeled demo values</p></div><span class="tag">PROVIDER RESULTS</span></div><div id="latest" class="empty">No live evaluations yet. Run one to start tracking task accuracy, time, provider tokens, and costs.</div></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><h2>What makes the evidence trustworthy?</h2><p>Strict separation of source data, benchmark ground truth, and experiment results</p></div></div><div class="trust-grid"><div><span>01 /</span><b>Source-isolated tests</b><p>Run the same tasks with and without specific datasets.</p></div><div><span>02 /</span><b>Measured LLM calls</b><p>Capture wall-clock times and provider token reports.</p></div><div><span>03 /</span><b>Independent grading</b><p>Answer keys never enter the model prompt.</p></div><div><span>04 /</span><b>Durable change history</b><p>Keep versioned source hashes and compare runs.</p></div></div></div>
+      </section>
+      <section id="experiments" class="view hidden">
+        <div class="heading"><div class="eyebrow">EVALUATION ENGINE</div><h1>Run a controlled experiment.</h1><p>Every configuration triggers actual model or agent calls. You choose the sources and cost ceiling.</p></div>
+        <div class="columns">
+          <div class="panel"><div class="panel-head"><div><h2>Configure a run</h2><p>Source exclusions affect the evidence the agent can access</p></div></div>
+            <label class="form-label">Experiment type</label><div class="radios"><label><input type="radio" name="mode" value="baseline" checked> Baseline / remove selected</label><label><input type="radio" name="mode" value="ablation"> Full source ablation study</label><label><input type="radio" name="mode" value="document_ablation"> Selected document importance study</label></div>
+            <label class="form-label">Exclude datasets in this run</label><div id="exclude-list" class="check-list"></div>
+            <div id="document-choice" class="hidden"><label class="form-label">Select up to 8 documents for ablation</label><div id="document-check-list" class="check-list"></div></div>
+            <label class="form-label" for="task-limit">Max benchmark tasks</label><input id="task-limit" class="number" type="number" min="1" max="200" value="10">
+            <p id="call-estimate" class="help">Model calls: —</p>
+            <label class="check-confirm"><input type="checkbox" id="confirm"> I understand this will call my configured model or agent and may incur charges.</label>
+            <button class="primary full" id="run-btn">▶ Run live evaluation</button>
+            <p class="fine">Evaluations are serialized and bounded by <code>max_model_calls_per_run</code>. Costs shown as USD only when pricing is known.</p>
+          </div>
+          <div class="panel"><div class="panel-head"><div><h2>Experiment output</h2><p>Latest selected run and source-level changes</p></div></div><div id="run-output" class="empty">Choose a configuration and run an experiment. You can also inspect any saved run from History.</div></div>
+        </div>
+        <div class="panel">
+          <h2>Standalone policy study</h2>
+          <p>Tune retrieval baselines and task-aware selection on development tasks, then compare frozen policies on grouped held-out tasks. Semantic grounding requires a completed claim-review packet.</p>
+          <label class="form-label" for="study-quality">Required accuracy</label>
+          <input id="study-quality" type="number" min="0" max="1" step="0.01" value="0.95">
+          <label class="form-label" for="study-objective">Objective</label>
+          <select id="study-objective"><option value="token_budget">Measured total tokens</option><option value="cost_per_success">Cost per correct task</option><option value="latency">Mean latency</option></select>
+          <label class="check-confirm"><input type="checkbox" id="study-confirm"> Run against my configured free localhost model. Remote paid execution is disabled in this form.</label>
+          <button id="study-btn" class="primary">Run policy study</button>
+          <p class="fine">No automatic deployment. Missing model usage and unreviewed semantic support remain unknown. Use the CLI to import completed reviewer adjudications.</p>
+        </div>
+        <div class="panel">
+          <h2>Source-change Data CI</h2>
+          <p>Freeze the current sources and configuration, edit your data, then compare current sources with that immutable baseline. SourceROI reports regressions and plausible document associations; it never applies a production rollback.</p>
+          <button id="ci-freeze" class="outline">Freeze baseline</button>
+          <label class="form-label" for="ci-snapshot">Frozen snapshot ID</label>
+          <input id="ci-snapshot" type="text" placeholder="Snapshot ID returned by Freeze baseline">
+          <label class="check-confirm"><input id="ci-confirm" type="checkbox"> Run a capped comparison using my configured free localhost model.</label>
+          <button id="ci-run" class="primary">Run source-change test</button>
+          <h3>Knowledge change release</h3>
+          <p class="help">Freeze above, edit sources, then inspect a proposal. Review decisions are explicit local assertions, not authenticated approvals.</p>
+          <label>Declared intent JSON (optional)<textarea id="knowledge-intent" rows="3" placeholder='{"expected_tasks":[],"protected_tasks":[],"declared_by":"Policy owner","rationale":"Explain intent"}'></textarea></label>
+          <label>Release policy <select id="knowledge-policy"><option value="legacy_exact">Legacy exact/reference checks</option><option value="strict_grounded">Strict grounded (independent review required)</option></select></label>
+          <button id="knowledge-plan" class="outline">Propose change and impact</button>
+          <pre id="knowledge-proposal"></pre>
+          <label>Review decisions JSON (reviewer, rationale, expected_changes, protected_tasks, expected_evidence)<textarea id="knowledge-decisions" rows="5" placeholder='{"reviewer":"Policy owner","rationale":"Explain approved scope","protected_tasks":[]}'></textarea></label>
+          <button id="knowledge-review" class="outline">Record explicit review</button>
+          <button id="knowledge-release" class="outline">Run local release check</button>
+          <p id="knowledge-status" class="help"></p>
+          <p id="ci-status" class="help">Default: up to 12 tasks and 300 seconds. Missing grounding review remains unknown.</p>
+        </div>
+        <div id="tasks-panel" class="panel hidden"><div class="panel-head"><div><h2>Task-level evidence</h2><p>Actual answers, independently graded outcomes, citations, measured latency</p></div></div><div class="table-scroll"><table><thead><tr><th>Task</th><th>Answer / ground truth</th><th>Outcome</th><th>Latency</th></tr></thead><tbody id="task-rows"></tbody></table></div></div>
+      </section>
+      <section id="history" class="view hidden">
+        <div class="heading"><div class="eyebrow">DATA CI / RUN HISTORY</div><h1>Track every data change.</h1><p>Compare saved runs to catch newly incorrect answers after document or source updates.</p></div>
+        <div class="panel"><div class="panel-head"><div><h2>Run history</h2><p>Durably stored in your workspace's local SQLite database</p></div></div><div id="history-rows"></div></div>
+        <div class="panel"><div class="panel-head"><div><h2>Compare two runs</h2><p>Both runs must use the same benchmark, runner and model</p></div></div>
+          <div class="compare-controls"><label>Baseline <select id="compare-before"></select></label><label>After change <select id="compare-after"></select></label><button id="compare-btn" class="outline">Compare ↗</button></div><div id="comparison" class="empty">Select two completed runs to see changed documents, newly failed tasks, and performance differences.</div>
+        </div>
+      </section>
+      <section id="setup" class="view hidden">
+        <div class="heading"><div class="eyebrow">CONNECTORS & CONFIGURATION</div><h1>Your data. Your evaluation.</h1><p>Bring existing folders and verifiable tasks. This beta runs locally and never includes synthetic scores in its live workspace.</p></div>
+        <div class="columns">
+          <div class="panel"><div class="panel-head"><div><h2>Workspace diagnostics</h2><p>What's connected right now</p></div></div><div id="diagnostics"></div></div>
+          <div class="panel"><div class="panel-head"><div><h2>Quick start</h2><p>Run these commands from your VS Code terminal</p></div></div>
+            <div class="step"><span>01</span><div><b>Install</b><pre>python3 -m pip install -e '.[dev]'</pre></div></div>
+            <div class="step"><span>02</span><div><b>Import your documents</b><pre>python3 -m sourceroi init --documents /path/to/mydata --output myworkspace</pre></div></div>
+            <div class="step"><span>03</span><div><b>Add expected answers</b><p>Edit <code>myworkspace/benchmark.jsonl</code>. Use independently checked facts, not answers invented by the model being tested.</p></div></div>
+            <div class="step"><span>04</span><div><b>Connect a real model</b><pre>export OPENAI_API_KEY="your-key"</pre><p>Or edit <code>project.json</code> for a local OpenAI-compatible model or an existing agent endpoint.</p></div></div>
+            <div class="step"><span>05</span><div><b>Launch your workspace</b><pre>python3 -m sourceroi --project myworkspace serve</pre></div></div>
+          </div>
+        </div>
+        <div class="panel"><h2>Data & privacy boundaries</h2><div class="trust-grid"><div><b>Local history</b><p>Run traces and benchmark answers are stored locally in SQLite, without encryption at rest.</p></div><div><b>Model calls</b><p>Selected source excerpts leave your machine when you use a hosted model. Get permission first.</p></div><div><b>No hosted authentication</b><p>UI is localhost-only. Do not deploy it publicly or expose through a tunnel.</p></div><div><b>Cost truthfulness</b><p>Dollar costs require configured provider rates or agent-reported billing. Unknown means unknown.</p></div></div></div>
+      </section>
+      <footer>SourceROI v0.2 beta · Source-level evaluations · Local-first · Not a claim of production validation</footer>
+    </div>
+  </div>
+</div>
+</body></html>

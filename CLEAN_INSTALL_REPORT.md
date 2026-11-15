@@ -1,0 +1,24 @@
+# Clean installation report — 2026-11-14
+
+**VERIFIED:** a Python 3.13.9/macOS arm64 venv was created without system site packages. Twenty-seven exact dependency/test/build wheels were obtained from the free Python package index into a project-local wheelhouse. Installation then used --no-index --require-hashes. SourceROI was built as a wheel without network/build isolation and installed non-editably. `pip check` reports no broken requirements. tools/verify_pilot_install.py proves the imported application lives inside the venv, user site is disabled and sys.prefix differs from the base interpreter. No global packages were changed.
+
+Evidence: docs/artifacts/pilot-acceptance/{dependency-download-network.txt,offline-install.txt,app-install.txt,installed-parsers.json,final-pip-check.txt,installed-inventory.json,wheel-manifest.json,lock-verification.json}. The initial sandbox-restricted download failed DNS and is preserved separately; it is not evidence that a package was unavailable. An approved free dependency download succeeded. External spending remains $0.
+
+**VERIFIED parser installation:** python-docx 1.2.0/lxml 6.1.3 generated and extracted a paragraph/table; pypdf 6.21.4 parsed a generated blank PDF; TXT, Markdown, CSV, JSON, JSONL and HTML extraction passed. The prior missing-DOCX environment blocker is resolved in this clean venv, not retroactively erased from earlier reports. This does not establish hostile-parser isolation, OCR, complex PDF fidelity or broad table semantics.
+
+**VERIFIED dependency identity:** requirements-pilot-py313-macos-arm64.lock pins the full 27-wheel closure with SHA-256, including runtime, test and build dependencies. tools/lock_pilot_dependencies.py reproduces/verifies that lock against actual wheels and installed versions, rejecting drift/duplicate distributions. The final distribution has a separate combined requirements.lock adding the built SourceROI wheel hash. The observed-only requirements file from the earlier sprint remains historical, not the new lock.
+
+**VERIFIED offline checks:** pip dependency consistency, wheel-content hash/metadata identity, installed package RECORD hashes (28 distributions including SourceROI), negative artifact-drift tests and source/package integrity checks. Offline installed-file audit scope excludes unlisted added files and cannot authenticate publishers. Evidence: offline-record-audit.json and tool-tests-final.txt.
+
+**PENDING:** no local advisory database was supplied; vulnerability/advisory queries, signature/publisher assessment and online dependency scanning were not performed. Hashes do not mean vulnerability-free. Linux, Windows, Intel macOS and other Python versions need separately resolved wheels/locks and installation tests. Base Python/OS provenance is inherited, not independently attested. Installation uses the venv's ensurepip bootstrap; its version is recorded in installed inventory, not claimed reproducible across arbitrary base interpreters.
+
+**VERIFIED packaging fix:** default setuptools source packaging did not explicitly include demo tools/examples/evidence. MANIFEST.in now includes the required pilot workflow and the four immutable replay artifacts/hash manifest, while excluding workspace/model files. Fresh extracted distributions execute the demo/onboarding. SourceROI internals and architecture were not changed for integration. tools/validate_table_release.py accepts new output/workspace paths, refusing existing outputs, so verification does not touch historical files.
+
+See FIRST_EXTERNAL_DEVELOPER.md for the exact offline bundle installation and real-app preparation commands. Final archive hashes, clean-bundle verification, full-suite result and historical-integrity counts are recorded in docs/artifacts/pilot-acceptance/summary.json. No enterprise production or independent customer readiness follows from this installation result.
+
+
+## Final acceptance evidence
+
+VERIFIED: complete clean-environment suite **349/349 passed in 9.44s**; extracted-distribution contract/security/package/HTTP tests **31/31 in 1.00s**; five new tooling regressions passed. A second empty venv installed all 28 distribution wheels offline with required hashes, and its parser/demo/onboarding checks passed. Native model calls and external spend remain zero.
+
+VERIFIED final distribution: [SourceROI-pilot-py313-macos-arm64.tar.gz](docs/artifacts/pilot-acceptance/SourceROI-pilot-py313-macos-arm64.tar.gz), SHA-256 `4f6668101c87777d202df3d4a77f014bb570cb1766e211d1c2387147a5d9acf3`. The source bundled at build time is frozen; these post-build results and final manifests are companion evidence under docs/artifacts/pilot-acceptance/. Verify archive contents before creating caches or working files; executing Python/tests adds unregistered bytecode/state to a working extraction and must not be mistaken for the sealed archive.

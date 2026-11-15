@@ -1,0 +1,13 @@
+{
+  "id": "finance-demo",
+  "name": "Financial Research Agent",
+  "description": "Fictional company filings, calls, market signals and research datasets. All data and prices are synthetic.",
+  "benchmark": "benchmark.json",
+  "sources": [
+    {"id": "filings", "name": "Company Filings", "description": "Annual reports and amended filings", "path": "sources/filings", "price_per_query_usd": 0, "modeled_latency_ms": 28, "color": "#32C4A5"},
+    {"id": "earnings", "name": "Earnings Intelligence", "description": "Management commentary and forward guidance", "path": "sources/earnings", "price_per_query_usd": 0.013, "modeled_latency_ms": 110, "color": "#6F8BFF"},
+    {"id": "market", "name": "Premium Market API", "description": "Share prices and market valuations", "path": "sources/market", "price_per_query_usd": 0.043, "modeled_latency_ms": 140, "color": "#B491FF"},
+    {"id": "industry", "name": "Industry Research", "description": "Sector demand and industry growth forecasts", "path": "sources/industry", "price_per_query_usd": 0.065, "modeled_latency_ms": 220, "color": "#EEB35A"},
+    {"id": "alternative", "name": "Alternative Signals", "description": "Satellite and digital-growth indicators", "path": "sources/alternative", "price_per_query_usd": 0.115, "modeled_latency_ms": 300, "color": "#F27B88"}
+  ]
+}

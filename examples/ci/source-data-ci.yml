@@ -1,0 +1,20 @@
+# Copy to .github/workflows only after provisioning YOUR OWN existing local runner.
+# No cloud runner, paid model endpoint, model download, or production policy mutation.
+name: SourceROI source-data CI
+on: workflow_dispatch
+jobs:
+  data-ci:
+    runs-on: [self-hosted, macOS, ARM64]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare registered sources to frozen baseline
+        env:
+          PYTHONUNBUFFERED: '1'
+        run: |
+          # Dependencies/model already installed on the self-hosted machine.
+          # Project model.local_only must be true; baseline must already be frozen.
+          python -m sourceroi --project workspace/customer-local data-ci \
+            --baseline workspace/customer-frozen --max-tasks 12 --max-seconds 300 \
+            --max-regressions 0 --max-evidence-drop 0 --allow-model-calls \
+            --output workspace/data-ci-report.json

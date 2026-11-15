@@ -1,0 +1,2 @@
+{"id":"q1","category":"Financial facts","question":"What was the fiscal year revenue stated in your document?","expected":"$123 million","scoring":"exact"}
+{"id":"q2","category":"Numerical","question":"What was the reported margin? Answer with the number only.","expected":"18.2","scoring":"numeric","tolerance":0.1}

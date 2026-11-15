@@ -1,0 +1,47 @@
+{
+  "kind": "Codex authored development cases; no independent validation",
+  "cases": [
+    {
+      "id": "literal_lookup",
+      "format": "txt",
+      "before": "Orion revenue for FY2025 is 100 USD.",
+      "after": "Orion revenue for FY2025 is 120 USD.",
+      "suggestion": "120"
+    },
+    {
+      "id": "csv_lookup",
+      "format": "csv",
+      "before": "company,attribute,period,value,unit\nOrion,revenue,FY2025,100,USD\n",
+      "after": "company,attribute,period,value,unit\nOrion,revenue,FY2025,120,USD\n",
+      "suggestion": "120"
+    },
+    {
+      "id": "markdown_lookup",
+      "format": "md",
+      "before": "| company | attribute | period | value | unit |\n|---|---|---|---|---|\n| Orion | revenue | FY2025 | 100 | USD |",
+      "after": "| company | attribute | period | value | unit |\n|---|---|---|---|---|\n| Orion | revenue | FY2025 | 120 | USD |",
+      "suggestion": "120"
+    },
+    {
+      "id": "conflicting_values",
+      "format": "txt",
+      "before": "Orion revenue for FY2025 is 100 USD.",
+      "after": "Orion revenue for FY2025 is 120 USD. Orion revenue for FY2025 is 130 USD.",
+      "suggestion": null
+    },
+    {
+      "id": "unsupported_narrative",
+      "format": "txt",
+      "before": "Orion reported revenue of 100 dollars in FY2025.",
+      "after": "Orion reported revenue of 120 dollars in FY2025.",
+      "suggestion": null
+    },
+    {
+      "id": "unchanged_value",
+      "format": "txt",
+      "before": "Orion revenue for FY2025 is 100 USD.",
+      "after": "Orion revenue for FY2025 is 100 USD.",
+      "suggestion": null
+    }
+  ]
+}

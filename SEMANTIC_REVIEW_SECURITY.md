@@ -1,0 +1,17 @@
+# Authenticated semantic review security — Phase 3
+
+**VERIFIED storage/integrity controls on fixture answers; independent semantic validity PENDING.** Maintenance approval and semantic adjudication are separate tables and concepts. The worker never generates semantic approvals.
+
+`SemanticStore.packet` derives a sample from a completed fixture release's actual frozen answer, retrieved context, citations and strict policy. Its binding covers job/task, source/config/task versions, the whole result identity, policy and sample. There is no API for substituting an arbitrary client sample or answer. The assigned maintenance reviewer or an admin can access that review packet; ordinary actors cannot enumerate another actor's job details.
+
+POST `/api/v2/jobs/{id}/semantic-reviews` requires a live reviewer/admin session, CSRF where applicable, exact task/binding, decision, explicit claim spans/evidence, all semantic dimensions (boolean or unknown), rationale and authorization basis. Client reviewer/independence fields are forbidden. The stored identity comes from the live database, not supplied metadata.
+
+Judgments distinguish supported, unsupported, contradicted, uncertain and applicability failure. Supported/unsupported/contradicted decisions require explicit full-answer claim coverage; support quotes must belong to retrieved, cited context. Supported positive decisions require complete consistent correctness/citation/scope/outdatedness dimensions. Uncertain input cannot become approval. These are integrity checks on a reviewer's statement, not proof that the statement is true.
+
+Records are immutable with a unique job/task/reviewer identity, nonce, timestamp, input digest and private audit event. Replay/overwrite, changed evidence/output/policy, job substitution, stale source versions and revoked/revised reviewer authority fail closed or invalidate assessment. Reconciliation seals are rechecked. Negative semantic judgments BLOCK; uncertain/missing review remains REVIEW; incomplete execution or invalid reconciliation is INCONCLUSIVE. Existing protected regressions cannot be overridden by a semantic record.
+
+**No login proves independence or expertise.** Stored `independence_verified_externally` is always false in this phase. Authorization basis is actual supplied reviewer input plus the assigned local role, not externally verified source-owner/expert authority. There is no client flag that can change this. Assessment never returns production ACCEPT for fixtures. Externally attested reviewer designation and real semantic acceptance require a later reviewed workflow.
+
+Acceptance scripts/tests submit explicitly labelled **Codex-authored fixture assertions**, with synthetic role accounts and no real human or customer labels. `authored-semantic-judgment.json` is test evidence only. Do not count it as independent validation. On restore, semantic records persist only in historical provenance; no reviewer, live judgment/receipt or active job authority is revived.
+
+Verified API tests cover impersonating reviewer metadata, fake independence fields, role/assignment isolation, stale bindings, immutable replay, source change, reviewer revocation, contradiction BLOCK and reconciliation tampering. The dashboard displays actual job evidence/requirements; semantic submission is currently an authenticated API workflow, not a completed browser adjudication UI. Full independent/human and browser usability acceptance is PENDING.

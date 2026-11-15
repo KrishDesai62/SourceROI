@@ -1,0 +1,28 @@
+{
+  "id": "my-first-agent",
+  "name": "My First Agent",
+  "runner": "rag_chat",
+  "benchmark": "benchmark.jsonl",
+  "model": {
+    "name": "gpt-4.1-mini",
+    "base_url": "https://api.openai.com/v1",
+    "api_key_env": "OPENAI_API_KEY",
+    "temperature": 0,
+    "timeout_seconds": 90,
+    "max_output_tokens": 500,
+    "input_price_per_million_usd": null,
+    "output_price_per_million_usd": null
+  },
+  "settings": {
+    "max_chunks": 5,
+    "chunk_chars": 1100,
+    "overlap_chars": 150,
+    "max_tasks_per_run": 50,
+    "max_documents_per_study": 8,
+    "max_model_calls_per_run": 100,
+    "max_estimated_model_cost_usd": null
+  },
+  "sources": [
+    {"id": "your_documents", "name": "Your Documents", "path": "sources/your_documents", "per_call_price_usd": null}
+  ]
+}

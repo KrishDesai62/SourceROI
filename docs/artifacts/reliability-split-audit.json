@@ -1,0 +1,10 @@
+{
+  "kind": "post_evaluation_data_only_overlap_audit",
+  "tasks": 24,
+  "shared_document_ids_across_splits": [],
+  "prior_exposed_title_overlap": [],
+  "near_duplicate_threshold": 0.9,
+  "fivegram_near_duplicates": [],
+  "test_cases_changed": false,
+  "limitations": "Lexical shingle checks cannot prove absence of semantic, entity, or pretraining leakage."
+}

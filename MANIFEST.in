@@ -1,0 +1,16 @@
+include *.md
+include requirements-pilot-py313-macos-arm64.lock
+recursive-include tools *.py
+recursive-include tests *.py
+recursive-include examples *.py *.json *.jsonl *.md *.txt *.sh *.yml
+recursive-include docs *.md
+include docs/artifacts/native-tables/table-workflow-summary.json
+include docs/artifacts/native-tables/table-release.json
+include docs/artifacts/native-tables/table-data-ci.json
+include docs/artifacts/native-tables/table-isolated-repair.json
+include docs/artifacts/production-beta/historical-hashes.json
+prune workspace
+prune docs/artifacts/pilot-acceptance
+include docs/artifacts/native-tables/SourceROI-external-evaluation-v2.tar.gz
+
+include PILOT_METRICS_TEMPLATE.json

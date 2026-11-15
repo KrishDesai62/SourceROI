@@ -1,0 +1,13 @@
+{
+  "event": null,
+  "origin": "operator",
+  "session_id": "",
+  "operator": "",
+  "details": null,
+  "active_seconds": null,
+  "adapter_edits": null,
+  "report_usefulness": null,
+  "source_owner_participated": null,
+  "reviewer_participated": null,
+  "release_verdict": null
+}
